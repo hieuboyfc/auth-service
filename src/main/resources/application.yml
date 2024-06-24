@@ -1,0 +1,46 @@
+server:
+  port: ${PORT:8888}
+  # Thoi gian cho cua Tomcat
+  connection-timeout: 5s
+  servlet:
+    context-path: /app
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  jackson:
+    date-format: ${DATE_FORMAT:yyyy-MM-dd'T'HH:mm:ssZ}
+    time-zone: ${TIME_ZONE:Asia/Ho_Chi_Minh}
+    default-property-inclusion: non_null
+  application:
+    name: ${APPLICATION_NAME:auth-service}
+  profiles:
+    active: local
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 20MB
+      max-request-size: 200MB
+  messages:
+    basename: language/message
+    encoding: UTF-8
+    cache-duration: -1
+
+logging:
+  level:
+    io.eventuate: debug
+    io.eventuate.tram: trace
+    org.springframework.orm.jpa: trace
+    org.hibernate.SQL: debug
+    org.springframework.jdbc.core: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+auth:
+  openapi:
+    dev-url: http://localhost:8888
+    prod-url: https://auth-service-api.com
+  parameter:
+    max-age-second: 3600
+  cors:
+    allowed-origins: http://localhost:8888 # Comma separated list of allowed origins

@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:./h2_database/auth_service;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS auth_service;MODE=PostgreSQL
+    # url: jdbc:h2:file:./h2_database/auth_service;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS auth_service;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: hieuboy
+    password: vip.hieuboy
+    # schema: classpath:init-script.sql
+    # initialization-mode: always
+    hikari:
+      # Cau hinh thoi gian cho
+      connection-timeout: 30000
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update # update
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        default_schema: auth_service
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: true # Ngăn chặn các dấu vết của database xuất ra bên ngoài
+        web-allow-others: true # Ngăn chặn tính năng kết nối từ xa đến database
