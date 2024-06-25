@@ -2,8 +2,12 @@ package com.zimji.auth.entity.custom;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zimji.auth.utils.Constants;
+import com.zimji.auth.utils.MapperUtils;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedBy;
@@ -59,6 +63,10 @@ public abstract class PersistableEntity<ID> extends BaseEntity<ID> {
     @PreUpdate
     void updateDate() {
         modifiedDate = new Date();
+    }
+
+    public <DTO> DTO toDTO(Class<DTO> dto) {
+        return MapperUtils.map(this, dto);
     }
 
 }

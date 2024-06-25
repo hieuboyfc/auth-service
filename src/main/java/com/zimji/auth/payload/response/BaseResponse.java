@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseResponse<E> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -1082791442821228L;
 
     String code;

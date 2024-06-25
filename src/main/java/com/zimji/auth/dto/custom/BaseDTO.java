@@ -19,6 +19,8 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class BaseDTO {
 
+    Long id;
+
     String createBy;
 
     @Temporal(TemporalType.TIMESTAMP)

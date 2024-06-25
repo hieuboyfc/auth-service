@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:./h2_database/auth_service;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS auth_service;MODE=PostgreSQL
-    # url: jdbc:h2:file:./h2_database/auth_service;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS auth_service;MODE=PostgreSQL
+    # url: jdbc:h2:mem:./h2_database/auth_service;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS auth_service;MODE=PostgreSQL
+    url: jdbc:h2:file:./h2_database/auth_service;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS auth_service
     driver-class-name: org.h2.Driver
     username: hieuboy
     password: vip.hieuboy
@@ -26,4 +26,4 @@ spring:
       path: /h2-console
       settings:
         trace: true # Ngăn chặn các dấu vết của database xuất ra bên ngoài
-        web-allow-others: true # Ngăn chặn tính năng kết nối từ xa đến database
+        web-allow-others: true # Ngăn chặn tính năng kết nối từ xa đến Database

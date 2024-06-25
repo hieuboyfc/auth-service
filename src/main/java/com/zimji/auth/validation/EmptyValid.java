@@ -15,7 +15,7 @@ public @interface EmptyValid {
 
     String message() default "LengthValid ---> Error";
 
-    int errorCode() default 1997;
+    String errorCode() default "1997";
 
     Class<?>[] groups() default {};
 

@@ -19,17 +19,20 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDTO extends BaseDTO {
 
-    @EmptyValid(message = "Username không được để trống!", errorCode = 4953)
+    @EmptyValid(message = "Username không được để trống!", errorCode = "4953")
+    String userId;
+
+    @EmptyValid(message = "Username không được để trống!", errorCode = "4953")
     @LengthValid(
             message = "Username độ dài phải nhỏ hơn {0} ký tự và lớn hơn {1} ký tự",
-            errorCode = 4953, min = 6, max = 50
+            errorCode = "4953", min = 6, max = 50
     )
     String username;
 
-    @EmptyValid(message = "Password không được để trống!", errorCode = 4953)
+    @EmptyValid(message = "Password không được để trống!", errorCode = "4953")
     @LengthValid(
             message = "Password độ dài phải nhỏ hơn {0} ký tự và lớn hơn {1} ký tự",
-            errorCode = 4953, min = 10, max = 100
+            errorCode = "4953", min = 10, max = 100
     )
     String password;
 
@@ -39,14 +42,16 @@ public class UserDTO extends BaseDTO {
 
     @PatternValid(
             message = "Địa chỉ Email không đúng định dạng!",
-            errorCode = 4953, regexPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$"
+            errorCode = "4953", regexPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$"
     )
+    @LengthValid(message = "Địa chỉ Email độ dài phải nhỏ hơn {0} ký tự", errorCode = "4953", max = 100)
     String email;
 
     @PatternValid(
             message = "Số điện thoại không đúng định dạng!",
-            errorCode = 4953, regexPattern = "^(\\\\+?84|0)([3|5|7|8|9])+([0-9]{8})\\\\b"
+            errorCode = "4953", regexPattern = "^(\\\\+?84|0)([3|5|7|8|9])+([0-9]{8})\\\\b"
     )
+    @LengthValid(message = "Số điện thoại độ dài phải nhỏ hơn {0} ký tự", errorCode = "4953", max = 20)
     String mobile;
 
     @JsonFormat(

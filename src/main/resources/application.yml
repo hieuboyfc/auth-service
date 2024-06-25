@@ -35,6 +35,7 @@ logging:
     org.hibernate.SQL: debug
     org.springframework.jdbc.core: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.springframework.orm.jpa.SharedEntityManagerCreator: OFF
 
 auth:
   openapi:

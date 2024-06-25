@@ -15,7 +15,7 @@ public @interface LengthValid {
 
     String message() default "LengthValid ---> Error";
 
-    int errorCode() default 1997;
+    String errorCode() default "1997";
 
     int min() default 0;
 

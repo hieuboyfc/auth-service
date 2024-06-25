@@ -17,7 +17,7 @@ public @interface PatternValid {
 
     String message() default "PatternValid ---> Error";
 
-    int errorCode() default 1997;
+    String errorCode() default "1997";
 
     String regexPattern();
 

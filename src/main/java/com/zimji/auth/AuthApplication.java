@@ -9,8 +9,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.TimeZone;
 
@@ -22,8 +20,6 @@ import java.util.TimeZone;
 @EnableConfigurationProperties(AuthProperties.class)
 public class AuthApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthApplication.class);
-
     @PostConstruct
     void started() {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
@@ -31,10 +27,6 @@ public class AuthApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AuthApplication.class, args);
-
-        logger.info("This is an info message");
-        logger.warn("This is a warning message");
-        logger.error("This is an error message");
     }
 
 }

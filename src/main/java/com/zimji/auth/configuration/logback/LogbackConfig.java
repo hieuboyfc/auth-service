@@ -1,3 +1,4 @@
+/*
 package com.zimji.auth.configuration.logback;
 
 import ch.qos.logback.classic.Level;
@@ -106,3 +107,4 @@ public class LogbackConfig {
     }
 
 }
+*/

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 @Table(name = "users",
         indexes = {
                 @Index(name = "idx_user_id", columnList = "id"),
+                @Index(name = "idx_user_user_id", columnList = "user_id"),
                 @Index(name = "idx_user_username", columnList = "username"),
                 @Index(name = "idx_user_status", columnList = "status"),
         },
@@ -29,10 +31,14 @@ import java.util.Date;
 public class User extends PersistableEntity<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "id", strategy = "com.zimji.auth.utils.generator.SnowflakeId")
+    @GeneratedValue(generator = "id")
     Long id;
 
-    @Column(name = "username", nullable = false, length = 50)
+    @Column(name = "user_id", length = 50, nullable = false)
+    String userId;
+
+    @Column(name = "username", length = 50, nullable = false)
     String username;
 
     @Column(name = "password", nullable = false)
