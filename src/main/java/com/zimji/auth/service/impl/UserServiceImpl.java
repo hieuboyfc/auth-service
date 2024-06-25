@@ -9,7 +9,7 @@ import com.zimji.auth.service.IUserService;
 import com.zimji.auth.utils.Constants.Action;
 import com.zimji.auth.utils.Constants.STATUS;
 import com.zimji.auth.utils.MapperUtils;
-import com.zimji.auth.utils.generator.IdentityGenerator;
+import com.zimji.auth.utils.generator.StringGeneratorUtils;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +34,9 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements IUserService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    UserRepository userRepo;
+    final UserRepository userRepo;
 
     @Override
     public Page<UserDTO> search(String search, Integer status, Pageable pageable) {
@@ -59,15 +59,20 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserDTO update(Long id, UserDTO dto) {
+        dto.setId(id);
         validateInput(dto, Action.UPDATE);
 
         User entity = userRepo.findById(id)
                 .orElseThrow(() -> new BusinessException("4953", "common.input.not_found.id"));
 
-        User update = toEntity(dto, entity, "password");
-        userRepo.save(update);
+        entity.setFullName(dto.getFullName());
+        entity.setEmail(dto.getEmail());
+        entity.setMobile(dto.getMobile());
+        entity.setDateOfBirth(dto.getDateOfBirth());
 
-        return toDTO(update);
+        userRepo.save(entity);
+
+        return toDTO(entity);
     }
 
     @Override
@@ -96,26 +101,27 @@ public class UserServiceImpl implements IUserService {
     private void validateInput(UserDTO dto, String actionType) {
         switch (actionType) {
             case Action.CREATE:
-                if (ObjectUtils.isEmpty(dto.getId())) {
-                    throw new BusinessException("1000", "common.input.required.id");
-                }
-
-                String userId = IdentityGenerator.ofUUID();
+                String userId = StringGeneratorUtils.getRandomUUID();
+                dto.setUserId(userId);
 
                 userRepo
-                        .findByUsernameAndUserId(0L, dto.getUsername(), userId, STATUS.DELETE.getValue())
+                        .findByUsernameAndUserId(0L, dto.getUsername(), dto.getUserId(), STATUS.DELETE.getValue())
                         .ifPresent(listChecks -> {
                             if (CollectionUtils.isNotEmpty(listChecks)) {
-                                throw new BusinessException("3005", "common.input.duplicate.code");
+                                throw new BusinessException("3005", "user.input.validate.duplicate.username");
                             }
                         });
                 break;
             case Action.UPDATE:
+                if (ObjectUtils.isEmpty(dto.getId())) {
+                    throw new BusinessException("1000", "common.input.required.id");
+                }
+
                 userRepo
                         .findByUsernameAndUserId(dto.getId(), dto.getUsername(), dto.getUserId(), STATUS.DELETE.getValue())
                         .ifPresent(listChecks -> {
                             if (CollectionUtils.isNotEmpty(listChecks)) {
-                                throw new BusinessException("1003", "common.input.exist.code");
+                                throw new BusinessException("1003", "user.input.validate.exist.username");
                             }
                         });
                 break;

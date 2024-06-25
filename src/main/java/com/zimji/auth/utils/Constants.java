@@ -2,6 +2,8 @@ package com.zimji.auth.utils;
 
 public class Constants {
 
+    public static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static String DEFAULT_TIMEZONE = "Asia/Ho_Chi_Minh";
     public static final String SYSTEM = "system";
 
     public static class Action {

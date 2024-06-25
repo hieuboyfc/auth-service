@@ -1,4 +1,4 @@
-package com.zimji.auth.utils.string;
+package com.zimji.auth.utils.generator;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -20,7 +20,7 @@ public class StringGeneratorUtils {
         return RandomStringUtils.random(LENGTH, true, true);
     }
 
-    public static String getRandomPassword() {
+    public static String getRandomUUID() {
         return UUID.randomUUID().toString();
     }
 

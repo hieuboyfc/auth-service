@@ -20,8 +20,6 @@ public class MessageTranslator {
     static Logger LOGGER = LoggerFactory.getLogger(MessageTranslator.class);
 
     static MessageTranslator instance = new MessageTranslator();
-    static String BUNDLE_NAME = "language/message";
-    static String LIBRARY_BUNDLE_NAME = "message";
 
     ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
 
@@ -36,12 +34,16 @@ public class MessageTranslator {
     }
 
     public MessageTranslator() {
-        this.resourceBundleMessageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        this.resourceBundleMessageSource.setBasenames(BUNDLE_NAME, LIBRARY_BUNDLE_NAME);
-        this.resourceBundleMessageSource.setUseCodeAsDefaultMessage(true);
-        this.resourceBundleMessageSource.setCacheSeconds(10);
+        try {
+            this.resourceBundleMessageSource.setDefaultEncoding(StandardCharsets.UTF_8.name());
+            this.resourceBundleMessageSource.setBasenames("language/message", "message");
+            this.resourceBundleMessageSource.setUseCodeAsDefaultMessage(true);
+            this.resourceBundleMessageSource.setCacheSeconds(10);
 
-        this.staticMessageSource.setParentMessageSource(resourceBundleMessageSource);
+            this.staticMessageSource.setParentMessageSource(resourceBundleMessageSource);
+        } catch (Exception e) {
+            LOGGER.error("Error setting Basenames: " + e.getMessage());
+        }
     }
 
     public static void register(String tag, Map<String, String> language) {

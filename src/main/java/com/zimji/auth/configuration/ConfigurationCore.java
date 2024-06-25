@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.zimji.auth.utils.Constants;
 import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -24,16 +25,14 @@ import java.util.TimeZone;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ConfigurationCore {
 
-    static String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-    static String DEFAULT_TIMEZONE = "Asia/Ho_Chi_Minh";
-
     public ConfigurationCore() {
     }
 
     @PostConstruct
     public void init() {
-        DateFormat dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-        dateFormat.setTimeZone(TimeZone.getTimeZone(DEFAULT_TIMEZONE));
+        DateFormat dateFormat = new SimpleDateFormat(Constants.DEFAULT_DATE_FORMAT);
+        dateFormat.setTimeZone(TimeZone.getTimeZone(Constants.DEFAULT_TIMEZONE));
+
         DatabindCodec.mapper().disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
         DatabindCodec.mapper().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         DatabindCodec.mapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -42,6 +41,7 @@ public class ConfigurationCore {
         DatabindCodec.mapper().setDateFormat(dateFormat);
         DatabindCodec.mapper().registerModule(new JavaTimeModule());
         DatabindCodec.mapper().findAndRegisterModules();
+
         DatabindCodec.prettyMapper().registerModule(new JavaTimeModule());
         DatabindCodec.prettyMapper().findAndRegisterModules();
         DatabindCodec.prettyMapper().disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);

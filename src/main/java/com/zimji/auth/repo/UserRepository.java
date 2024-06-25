@@ -1,9 +1,9 @@
 package com.zimji.auth.repo;
 
 import com.zimji.auth.entity.User;
+import com.zimji.auth.repo.custom.BaseRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends BaseRepository<User, Long> {
 
     @Query("SELECT u " +
             "   FROM User u " +

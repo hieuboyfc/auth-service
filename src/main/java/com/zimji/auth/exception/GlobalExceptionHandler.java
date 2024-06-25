@@ -1,82 +1,50 @@
 package com.zimji.auth.exception;
 
 import com.zimji.auth.payload.response.BaseResponse;
+import com.zimji.auth.utils.ResponseUtils;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
-public class GlobalExceptionHandler {
+@RestControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
-    public ResponseEntity<?> handleMaxSizeException(MaxUploadSizeExceededException e, WebRequest request) {
-        BaseResponse<?> response = BaseResponse.builder()
-                .code(String.valueOf(HttpStatus.PAYLOAD_TOO_LARGE.value()))
-                .timestamp(new Date())
-                .message(e.getMessage())
-                .description(request.getDescription(false))
-                .build();
-
+    public ResponseEntity<BaseResponse<?>> handleMaxSizeException(MaxUploadSizeExceededException e, WebRequest request) {
+        BaseResponse<?> response = ResponseUtils.buildBaseResponse(e, request, HttpStatus.PAYLOAD_TOO_LARGE.value());
         return new ResponseEntity<>(response, HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
-    /*@ExceptionHandler(ResourceNotFoundExceptio.class)
-    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException e, WebRequest request) {
-        BaseResponse<?> response = BaseResponse.builder()
-                .code(String.valueOf(HttpStatus.NOT_FOUND.value()))
-                .timestamp(new Date())
-                .message(e.getMessage())
-                .description(request.getDescription(false))
-                .build();
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }*/
-
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<?> handleBusinessException(BusinessException e, WebRequest request) {
-        BaseResponse<?> response = BaseResponse.builder()
-                .code(String.valueOf(HttpStatus.NOT_FOUND.value()))
-                .timestamp(new Date())
-                .message(e.getMessage())
-                .description(request.getDescription(false))
-                .build();
-
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> handleRuntimeException(RuntimeException e, WebRequest request) {
-        BaseResponse<?> response = BaseResponse.builder()
-                .code(String.valueOf(HttpStatus.NOT_FOUND.value()))
-                .timestamp(new Date())
-                .message(e.getMessage())
-                .description(request.getDescription(false))
-                .build();
-
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<BaseResponse<?>> handleBusinessException(BusinessException e, WebRequest request) {
+        BaseResponse<?> response = ResponseUtils.buildBaseResponse(e, request, HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e, WebRequest request) {
-        BaseResponse<?> response = BaseResponse.builder()
-                .code(String.valueOf(HttpStatus.NOT_FOUND.value()))
-                .timestamp(new Date())
-                .message(e.getMessage())
-                .description(request.getDescription(false))
-                .build();
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<BaseResponse<?>> handleRuntimeException(RuntimeException e, WebRequest request) {
+        BaseResponse<?> response = ResponseUtils.buildBaseResponse(e, request, HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<BaseResponse<?>> handleException(Exception e, WebRequest request) {
+        BaseResponse<?> response = ResponseUtils.buildBaseResponse(e, request, HttpStatus.INTERNAL_SERVER_ERROR.value());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

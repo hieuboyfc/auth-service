@@ -1,9 +1,9 @@
 server:
   port: ${PORT:8888}
   # Thoi gian cho cua Tomcat
-  connection-timeout: 5s
-  servlet:
-    context-path: /app
+  #  connection-timeout: 5s
+  #  servlet:
+  #    context-path: /app
 
 spring:
   main:
@@ -15,7 +15,7 @@ spring:
   application:
     name: ${APPLICATION_NAME:auth-service}
   profiles:
-    active: local
+    active: local2
   servlet:
     multipart:
       enabled: true
@@ -35,7 +35,7 @@ logging:
     org.hibernate.SQL: debug
     org.springframework.jdbc.core: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
-    org.springframework.orm.jpa.SharedEntityManagerCreator: OFF
+    org.springframework.orm.jpa.SharedEntityManagerCreator: debug
 
 auth:
   openapi:

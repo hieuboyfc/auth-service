@@ -24,7 +24,7 @@ import java.util.Date;
                 @Index(name = "idx_user_status", columnList = "status"),
         },
         uniqueConstraints = {
-                @UniqueConstraint(name = "unique_user_username", columnNames = "username")
+                @UniqueConstraint(name = "unique_user_username", columnNames = "username, user_id")
         }
 )
 @FieldDefaults(level = AccessLevel.PRIVATE)

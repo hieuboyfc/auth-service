@@ -1,7 +1,5 @@
 package com.zimji.auth.utils.generator;
 
-import com.zimji.auth.utils.string.StringGeneratorUtils;
-
 import java.nio.ByteBuffer;
 import java.util.UUID;
 

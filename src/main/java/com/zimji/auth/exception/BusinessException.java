@@ -4,19 +4,23 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
 
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BusinessException extends RuntimeException {
 
-    HttpStatus status;
     String code;
     String message;
     Object[] args;
 
     public BusinessException() {
+    }
+
+    public BusinessException(String message) {
+        super(message);
+        this.code = "4953";
+        this.message = message;
     }
 
     public BusinessException(String code, String message) {

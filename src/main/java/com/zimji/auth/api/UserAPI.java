@@ -2,6 +2,7 @@ package com.zimji.auth.api;
 
 import com.zimji.auth.dto.UserDTO;
 import com.zimji.auth.service.IUserService;
+import com.zimji.auth.utils.ResponseUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -18,13 +19,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("api/user")
 @RequiredArgsConstructor
 @Tag(name = "UserAPI", description = "User API")
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserAPI {
 
-    IUserService service;
+    final IUserService service;
 
     @PostMapping("/search")
     @Operation(summary = "User - Search", description = "User - Search", tags = {"UserAPI"})
@@ -34,15 +35,15 @@ public class UserAPI {
             name = "key",
             schema = @Schema(implementation = String.class)
     )
-    public ResponseEntity<?> search(
+    ResponseEntity<?> search(
             @Parameter(description = "Param Search") @RequestParam(required = false) String search,
             @Parameter(description = "Param Status") @RequestParam(defaultValue = "-1") Integer status,
             @Parameter(description = "Pageable") Pageable pageable
     ) {
         try {
-            return new ResponseEntity<>(service.search(search, status, pageable), HttpStatus.OK);
+            return ResponseUtils.handlerSuccess(service.search(search, status, pageable));
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseUtils.handlerException(e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -54,13 +55,13 @@ public class UserAPI {
             name = "key",
             schema = @Schema(implementation = String.class)
     )
-    public ResponseEntity<?> create(
+    ResponseEntity<?> create(
             @Parameter(description = "Payload DTO") @RequestBody UserDTO dto
     ) {
         try {
-            return new ResponseEntity<>(service.create(dto), HttpStatus.OK);
+            return ResponseUtils.handlerSuccess(service.create(dto));
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseUtils.handlerException(e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -72,14 +73,14 @@ public class UserAPI {
             name = "key",
             schema = @Schema(implementation = String.class)
     )
-    public ResponseEntity<?> update(
+    ResponseEntity<?> update(
             @Parameter(description = "Path Variable ID") @PathVariable Long id,
             @Parameter(description = "Payload DTO") @RequestBody UserDTO dto
     ) {
         try {
-            return new ResponseEntity<>(service.update(id, dto), HttpStatus.OK);
+            return ResponseUtils.handlerSuccess(service.update(id, dto));
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseUtils.handlerException(e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -91,14 +92,14 @@ public class UserAPI {
             name = "key",
             schema = @Schema(implementation = String.class)
     )
-    public ResponseEntity<?> delete(
+    ResponseEntity<?> delete(
             @Parameter(description = "Payload IDs") @RequestBody Set<Long> ids
     ) {
         try {
             service.deleteByIds(ids);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseUtils.handlerSuccess();
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseUtils.handlerException(e, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -110,13 +111,13 @@ public class UserAPI {
             name = "key",
             schema = @Schema(implementation = String.class)
     )
-    public ResponseEntity<?> getDetail(
+    ResponseEntity<?> getDetail(
             @Parameter(description = "Path Variable ID") @PathVariable Long id
     ) {
         try {
-            return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
+            return ResponseUtils.handlerSuccess(service.getById(id));
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseUtils.handlerException(e, HttpStatus.BAD_REQUEST);
         }
     }
 
