@@ -12,7 +12,7 @@ public class EmptyValidator implements ConstraintValidator<EmptyValid, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        return value == null || value.trim().isEmpty();
+        return value != null;
     }
 
 }

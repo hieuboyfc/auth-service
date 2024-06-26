@@ -3,16 +3,17 @@ package com.zimji.auth.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import org.hibernate.validator.internal.constraintvalidators.bv.PatternValidator;
+import jakarta.validation.ReportAsSingleViolation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PatternValidator.class)
+@Constraint(validatedBy = {PatternValidator.class})
+@ReportAsSingleViolation
 public @interface PatternValid {
 
     String message() default "PatternValid ---> Error";

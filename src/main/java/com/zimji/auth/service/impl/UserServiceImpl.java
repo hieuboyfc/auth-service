@@ -9,6 +9,7 @@ import com.zimji.auth.service.IUserService;
 import com.zimji.auth.utils.Constants.Action;
 import com.zimji.auth.utils.Constants.STATUS;
 import com.zimji.auth.utils.MapperUtils;
+import com.zimji.auth.utils.ValidatorUtils;
 import com.zimji.auth.utils.generator.StringGeneratorUtils;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements IUserService {
     static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     final UserRepository userRepo;
+    final ValidatorUtils validatorUtils;
 
     @Override
     public Page<UserDTO> search(String search, Integer status, Pageable pageable) {
@@ -99,6 +101,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     private void validateInput(UserDTO dto, String actionType) {
+        LOGGER.info("--- UserServiceImpl.validateInput()");
+
+        // Thực hiện validation bằng ValidatorUtils
+        validatorUtils.validate(true, dto);
+
         switch (actionType) {
             case Action.CREATE:
                 String userId = StringGeneratorUtils.getRandomUUID();

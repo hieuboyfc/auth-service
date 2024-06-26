@@ -1,5 +1,6 @@
 package com.zimji.auth.exception;
 
+import com.zimji.auth.configuration.message_source.MessageTranslator;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,13 +21,13 @@ public class BusinessException extends RuntimeException {
     public BusinessException(String message) {
         super(message);
         this.code = "4953";
-        this.message = message;
+        this.message = MessageTranslator.getMessage(message);
     }
 
     public BusinessException(String code, String message) {
         super(message);
         this.code = code;
-        this.message = message;
+        this.message = MessageTranslator.getMessage(message);
     }
 
     public BusinessException(String code, String message, Object... args) {

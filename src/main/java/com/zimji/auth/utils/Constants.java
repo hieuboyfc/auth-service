@@ -6,6 +6,14 @@ public class Constants {
     public static String DEFAULT_TIMEZONE = "Asia/Ho_Chi_Minh";
     public static final String SYSTEM = "system";
 
+    public static class Regex {
+        private Regex() {
+        }
+
+        public static final String EMAIL = "^[A-Za-z0-9](([a-zA-Z0-9,=\\.!\\-#|\\$%\\^&\\*\\+/\\?_`\\{\\}~]+)*)@(?:[0-9a-zA-Z-]+\\.)+[a-zA-Z]{2,9}$";
+        public static final String MOBILE = "^(\\\\+?84|0)([3|5|7|8|9])+([0-9]{8})\\\\b";
+    }
+
     public static class Action {
         private Action() {
         }

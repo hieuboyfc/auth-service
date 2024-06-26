@@ -6,15 +6,20 @@ import com.zimji.auth.payload.response.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class ResponseUtils {
+
+    static final Logger LOGGER = LoggerFactory.getLogger(ResponseUtils.class);
 
     public static <T> ResponseEntity<BaseResponse<?>> handlerSuccess() {
         return ResponseEntity.ok(BaseResponse.builder()
@@ -32,6 +37,8 @@ public class ResponseUtils {
     }
 
     public static ResponseEntity<BaseResponse<?>> handlerException(Throwable exception, HttpStatus status) {
+        LOGGER.error(Arrays.toString(exception.getStackTrace()));
+
         String description = StringUtils.EMPTY;
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (ObjectUtils.isNotEmpty(attributes)) {

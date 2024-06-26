@@ -9,7 +9,9 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
-import org.apache.commons.lang3.ObjectUtils;
+import ch.qos.logback.core.util.FileSize;
+import com.zimji.auth.service.impl.UserServiceImpl;
+import com.zimji.auth.utils.CommonUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +19,9 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class LogbackConfig {
+
+    static String FILE_NAME = "COMMON";
+    static String CONSOLE_APPENDER_NAME = "CONSOLE";
 
     public LogbackConfig() {
         configure();
@@ -30,12 +35,12 @@ public class LogbackConfig {
         loggerContext.getLogger(Logger.ROOT_LOGGER_NAME).addAppender(consoleAppender);
 
         // File Appender for common log
-        RollingFileAppender<ILoggingEvent> fileAppender = createRollingFileAppender(loggerContext, "COMMON");
+        RollingFileAppender<ILoggingEvent> fileAppender = createRollingFileAppender(loggerContext, FILE_NAME);
         loggerContext.getLogger(Logger.ROOT_LOGGER_NAME).addAppender(fileAppender);
 
         // Root Logger
         Logger rootLogger = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-        rootLogger.setLevel(Level.ERROR);
+        rootLogger.setLevel(Level.INFO);
         rootLogger.addAppender(consoleAppender);
         rootLogger.addAppender(fileAppender);
 
@@ -46,18 +51,18 @@ public class LogbackConfig {
     private ConsoleAppender<ILoggingEvent> createConsoleAppender(LoggerContext loggerContext) {
         ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
         consoleAppender.setContext(loggerContext);
-        consoleAppender.setName("CONSOLE");
+        consoleAppender.setName(CONSOLE_APPENDER_NAME);
         PatternLayoutEncoder consoleEncoder = createPatternLayoutEncoder(loggerContext);
         consoleAppender.setEncoder(consoleEncoder);
         consoleAppender.start();
         return consoleAppender;
     }
 
-    private RollingFileAppender<ILoggingEvent> createRollingFileAppender(LoggerContext loggerContext, String name) {
+    private RollingFileAppender<ILoggingEvent> createRollingFileAppender(LoggerContext loggerContext, String fileName) {
         RollingFileAppender<ILoggingEvent> fileAppender = new RollingFileAppender<>();
         fileAppender.setContext(loggerContext);
-        fileAppender.setName(name + "_FILE");
-        fileAppender.setRollingPolicy(createTimeBasedRollingPolicy(loggerContext, fileAppender, null));
+        fileAppender.setName(fileName + "_FILE");
+        fileAppender.setRollingPolicy(createTimeBasedRollingPolicy(loggerContext, fileAppender, fileName));
         PatternLayoutEncoder fileEncoder = createPatternLayoutEncoder(loggerContext);
         fileAppender.setEncoder(fileEncoder);
         fileAppender.start();
@@ -76,32 +81,31 @@ public class LogbackConfig {
 
     private void configureClassLoggers(LoggerContext loggerContext) {
         // Configure loggers for individual classes
-        // configureClassLogger(loggerContext, Class1.class);
+        configureClassLogger(loggerContext, Level.INFO, UserServiceImpl.class);
         // configureClassLogger(loggerContext, Class2.class);
         // Add configurations for other classes...
     }
 
-    private <T> void configureClassLogger(LoggerContext loggerContext, Class<T> clazz) {
+    private <T> void configureClassLogger(LoggerContext loggerContext, Level level, Class<T> clazz) {
         Logger logger = loggerContext.getLogger(clazz);
-        RollingFileAppender<ILoggingEvent> fileAppender = createRollingFileAppender(loggerContext, clazz.getSimpleName().toUpperCase());
+        String fileName = CommonUtils.convertToSnakeCase(clazz.getSimpleName(), '_').toUpperCase();
+        RollingFileAppender<ILoggingEvent> fileAppender = createRollingFileAppender(loggerContext, fileName);
+        logger.setLevel(level);
         logger.addAppender(fileAppender);
     }
 
     private <T> TimeBasedRollingPolicy<ILoggingEvent> createTimeBasedRollingPolicy(LoggerContext loggerContext,
                                                                                    RollingFileAppender<ILoggingEvent> fileAppender,
-                                                                                   Class<T> clazz) {
+                                                                                   String fileName) {
         // Get package name
-        String packageName = (ObjectUtils.isNotEmpty(clazz))
-                ? clazz.getPackage().getName().replace(".", "/") + "/" + clazz.getSimpleName()
-                : "common";
-
-        String fileLog = "logs/%d{yyyy-MM-dd}/" + packageName.toLowerCase() + ".log";
+        String fileLog = "logs/%d{yyyy-MM-dd}/" + fileName.toLowerCase() + ".log";
 
         TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
         rollingPolicy.setFileNamePattern(fileLog);
         rollingPolicy.setMaxHistory(30); // Keep 30 days of history
         rollingPolicy.setContext(loggerContext);
         rollingPolicy.setParent(fileAppender);
+        rollingPolicy.setTotalSizeCap(new FileSize(10L * FileSize.GB_COEFFICIENT)); // 10 GB
         rollingPolicy.start();
         return rollingPolicy;
     }
